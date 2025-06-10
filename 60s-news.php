@@ -18,7 +18,6 @@ function getRandomFileName($directory)
     return $files[$index];
 }
 
-// 使用新API地址
 $all_data = file_get_contents("https://api.chinasclm.com/api/api-60s-news");
 $all_data = json_decode($all_data);
 
@@ -27,8 +26,7 @@ if ($all_data->code != 200) {
     die('API请求失败: ' . $all_data->msg);
 }
 
-// 使用新API的字段
-$title = $all_data->title;  // 对应原title参数
+$title = $all_data->title;  
 
 // 构建新闻内容：将数组元素拼接为HTML段落
 $content = '';
@@ -36,10 +34,10 @@ foreach ($all_data->news as $news_item) {
     $content .= '<p>' . $news_item . '</p>';
 }
 
-// 使用新API的update_time字段，转换为时间戳
+// 转换为时间戳
 $update_time = strtotime($all_data->update_time);
 
-// 随机选择图片（移除原时区调整，因新API时间格式不同）
+// 随机选择图片
 $number = date('w', $update_time); 
 $rand_img = getRandomFileName("60s/".$number);
 $rand_path = $number. "/" . $rand_img;
@@ -47,7 +45,6 @@ $rand_path = $number. "/" . $rand_img;
 // 添加头图到内容开头
 $content = '<img class="size-full wp-image-156 aligncenter" src="/60s/'.$rand_path.'" alt="" width="720" height="350" />'.$content;
 
-// 以下部分保持不变
 require __DIR__ . '/wp-config.php';
 global $wpdb;
 date_default_timezone_set('PRC');
